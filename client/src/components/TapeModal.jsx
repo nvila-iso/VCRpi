@@ -129,8 +129,13 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete }) => {
                 <p className="text-xl text-amber-100 font-semibold">
                   INSERT CASSETTE
                 </p>
-                <p className="text-xs text-amber-100">
-                  WAITING FOR SIGNAL . . .
+                <p className="font-semibold text-xs text-amber-100 flex justify-center">
+                  WAITING FOR SIGNAL
+                  <span className="ml-1 flex gap-2 ">
+                    <span className="dot-1">.</span>
+                    <span className="dot-2">.</span>
+                    <span className="dot-3">.</span>
+                  </span>
                 </p>
               </div>
             </div>

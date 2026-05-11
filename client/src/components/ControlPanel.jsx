@@ -8,13 +8,29 @@ import SignalStatus from "./SignalStatus";
 import TransportControls from "./TransportControls";
 import TapeModal from "./TapeModal";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const ControlPanel = ({ isRecording, setIsRecording }) => {
   const [tapes, setTapes] = useState([]);
   const [selectedTapeId, setSelectedTapeId] = useState(null);
   const [isTapeModalOpen, setIsTapeModalOpen] = useState(false);
   const [editingTape, setEditingTape] = useState(null);
+  const [hasLoaded, setHasLoaded] = useState(false);
+
+  useEffect(() => {
+    const savedTapes = localStorage.getItem("tapes");
+
+    if (savedTapes) {
+      setTapes(JSON.parse(savedTapes));
+    }
+
+    setHasLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoaded) return;
+    localStorage.setItem("tapes", JSON.stringify(tapes));
+  }, [tapes, hasLoaded]);
 
   const onNewTape = () => {
     setIsTapeModalOpen(true);
