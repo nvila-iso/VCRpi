@@ -2,8 +2,10 @@ import vhs_tape from "../../public/vhs_tape.svg";
 import { IoTriangle } from "react-icons/io5";
 import { useState } from "react";
 
-const TapeModal = ({ onSave, onCancel, tapeToEdit }) => {
-  const [coverPreview, setCoverPreview] = useState("/VAS_VHS.png");
+const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete }) => {
+  const [coverPreview, setCoverPreview] = useState(
+    tapeToEdit?.coverImage || "/VAS_VHS.png",
+  );
   const [title, setTitle] = useState("");
   const [length, setLength] = useState("");
   const [condition, setCondition] = useState("");
@@ -27,8 +29,8 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit }) => {
       <div className="w-200 h-120 bg-[#1F0436] border-2 border-amber-200/50 p-3 rounded-xs flex flex-col justify-between">
         <div className="flex justify-between items-center">
           <p className="pl-5 text-blue-300 font-semibold">
-            TAPE INSERTION{" "}
-            <span className="text-xs text-amber-400/70">テープ挿入</span>
+            {tapeToEdit ? "EDIT TAPE" : "TAPE INSERTION"}
+            <span className="text-xs text-amber-400/70"> テープ挿入</span>
           </p>
           <button
             onClick={() => onCancel()}
@@ -68,14 +70,14 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit }) => {
               <input
                 type="text"
                 placeholder="TITLE"
-                value={title}
+                value={tapeToEdit ? tapeToEdit.title : title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 className="border-b border-amber-100 p-1 w-[90%]"
               />
               <input
                 type="text"
-                value={length}
+                value={tapeToEdit ? tapeToEdit.length : length}
                 onChange={(e) => setLength(e.target.value)}
                 placeholder="LENGTH"
                 className="border-b border-amber-100 p-1 w-[90%]"
@@ -83,7 +85,7 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit }) => {
               <select
                 name=""
                 id=""
-                value={condition}
+                value={tapeToEdit ? tapeToEdit.condition : condition}
                 onChange={(e) => setCondition(e.target.value)}
                 className="p-1 border-b w-[90%] border-amber-100 text-amber-100"
               >
@@ -101,9 +103,17 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit }) => {
                 type="submit"
                 className="text-amber-100/50 font-semibold border border-amber-200/30 px-2 py-1 hover:border-amber-200/60 hover:text-amber-200/80 transition"
               >
-                SUBMIT
+                {tapeToEdit ? "SAVE" : "SUBMIT"}
               </button>
             </form>
+            {tapeToEdit && (
+              <button
+                onClick={onDelete}
+                className="absolute top-15 left-80 border border-amber-200/70 px-2 py-1 text-xs text-amber-200/70 hover:text-amber-200 hover:border-amber-200 transition cursor-pointer"
+              >
+                DELETE
+              </button>
+            )}
           </div>
           <div className="border-l border-amber-200/30 relative">
             <img

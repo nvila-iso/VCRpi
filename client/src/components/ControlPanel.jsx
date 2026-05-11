@@ -63,6 +63,16 @@ const ControlPanel = ({ isRecording, setIsRecording }) => {
     setIsTapeModalOpen(false);
   };
 
+  const handleDeleteTape = () => {
+    if (!editingTape) return;
+
+    setTapes((prev) => prev.filter((tape) => tape.id !== editingTape.id));
+
+    setSelectedTapeId(null);
+    setEditingTape(null);
+    setIsTapeModalOpen(false);
+  };
+
   return (
     <>
       <div className="grid grid-cols-[400px_1fr_300px] grid-rows-[1fr_1fr] gap-5 relative">
@@ -104,7 +114,11 @@ const ControlPanel = ({ isRecording, setIsRecording }) => {
               <TapeModal
                 tapeToEdit={editingTape}
                 onSave={handleSaveTape}
-                onCancel={() => setIsTapeModalOpen(false)}
+                onDelete={handleDeleteTape}
+                onCancel={() => {
+                  setEditingTape(null);
+                  setIsTapeModalOpen(false);
+                }}
               />
             </div>
           </div>
