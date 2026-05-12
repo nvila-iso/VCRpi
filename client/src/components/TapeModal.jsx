@@ -1,3 +1,4 @@
+import { API_BASE } from "../config";
 import vhs_tape from "../../public/vhs_tape.svg";
 import { IoTriangle } from "react-icons/io5";
 import { useState } from "react";
@@ -5,7 +6,7 @@ import { useState } from "react";
 const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete, onTransfer }) => {
   const [coverPreview, setCoverPreview] = useState(
     tapeToEdit?.coverImage?.startsWith("/uploads")
-      ? `http://localhost:5174${tapeToEdit.coverImage}`
+      ? `${API_BASE}${tapeToEdit.coverImage}`
       : tapeToEdit?.coverImage || "/VAS_VHS.png",
   );
 
@@ -141,12 +142,7 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete, onTransfer }) => {
                 <div className="flex flex-col gap-3 text-xs">
                   <div className="">
                     <p className="text-amber-400">FILE</p>
-                    <p className="">
-                      {/* {tapeToEdit?.activeRecordingFilename ||
-                        tapeToEdit?.recordings?.at(-1)?.filename ||
-                        "--"} */}
-                      {filePath}
-                    </p>
+                    <p className="">{filePath}</p>
                   </div>
                   <div>
                     <p className="text-amber-400">LOCATION</p>

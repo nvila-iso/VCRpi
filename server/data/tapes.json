@@ -9,7 +9,7 @@
     "status": "ON_NAS",
     "coverImage": "/uploads/covers/0abb3186-b19d-472d-ab7e-952555566060.jpg",
     "createdAt": "2026-05-11T20:33:46.511Z",
-    "updatedAt": "2026-05-12T15:16:35.543Z",
+    "updatedAt": "2026-05-12T16:49:30.010Z",
     "recordings": [
       {
         "filename": "jurassic_park_2026-05-11.mkv",
@@ -17,10 +17,34 @@
         "stoppedAt": "2026-05-11T19:50:00.000Z",
         "status": "ON_NAS",
         "nasPath": "C:\\Users\\Nick\\Documents\\Projects\\vhs-pi\\server\\nas\\jurassic_park_2026-05-11.mkv",
-        "transferredAt": "2026-05-12T15:16:35.543Z"
+        "transferredAt": "2026-05-12T16:49:30.010Z"
       }
     ],
     "recordingStartedAt": "2026-05-12T14:53:28.468Z",
     "activeRecordingFilename": "jurassic_park_2026-05-12.mkv"
+  },
+  {
+    "id": "e24ae9a5-c513-43b1-ac8b-62ea99f62797",
+    "title": "Akira",
+    "length": 124,
+    "condition": "excellent",
+    "format": "VHS",
+    "captureDate": "2026-05-12",
+    "status": "ON_NAS",
+    "coverImage": "/uploads/covers/e24ae9a5-c513-43b1-ac8b-62ea99f62797.jpg",
+    "createdAt": "2026-05-12T16:43:00.514Z",
+    "updatedAt": "2026-05-12T16:54:37.560Z",
+    "recordingStartedAt": "2026-05-12T16:44:52.608Z",
+    "activeRecordingFilename": "akira_2026-05-12.mkv",
+    "recordings": [
+      {
+        "filename": "akira_2026-05-12.mkv",
+        "recordedAt": "2026-05-12T12:00:00.000Z",
+        "stoppedAt": "2026-05-12T12:10:00.000Z",
+        "status": "ON_NAS",
+        "nasPath": "C:\\Users\\Nick\\Documents\\Projects\\vhs-pi\\server\\nas\\akira_2026-05-12.mkv",
+        "transferredAt": "2026-05-12T16:54:37.560Z"
+      }
+    ]
   }
 ]

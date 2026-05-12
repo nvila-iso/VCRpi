@@ -28,10 +28,6 @@ const VideoPreview = () => {
                 </p>
               </div>
             </div>
-            {/* <img
-              src="no_signal.png"
-              className="absolute h-full w-full object-fit"
-            ></img> */}
           </div>
         </div>
       </div>

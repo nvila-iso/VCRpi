@@ -1,3 +1,5 @@
+import { API_BASE } from "../config";
+
 const TapeInfo = ({ tapes, selectedTapeId }) => {
   const selectedTape = tapes.find((tape) => tape.id === selectedTapeId);
 
@@ -39,7 +41,7 @@ const TapeInfo = ({ tapes, selectedTapeId }) => {
             <img
               src={
                 selectedTape?.coverImage?.startsWith("/uploads")
-                  ? `http://localhost:5174${selectedTape.coverImage}`
+                  ? `${API_BASE}${selectedTape.coverImage}`
                   : selectedTape?.coverImage || "/VAS_VHS.png"
               }
               className="h-full object-cover"

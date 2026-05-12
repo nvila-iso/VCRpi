@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const fs = require("fs");
 const path = require("path");
 const { randomUUID } = require("crypto");
@@ -7,10 +9,26 @@ const cors = require("cors");
 const { spawn } = require("child_process");
 const multer = require("multer");
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const PORT = process.env.PORT || 5174;
+
+const DATA_DIR = path.resolve(process.cwd(), process.env.DATA_DIR || "./data");
+const RECORDINGS_DIR = path.resolve(
+  process.cwd(),
+  process.env.RECORDINGS_DIR || "./recordings",
+);
+const NAS_DIR = path.resolve(process.cwd(), process.env.NAS_DIR || "./nas");
+const UPLOADS_DIR = path.resolve(
+  process.cwd(),
+  process.env.UPLOADS_DIR || "./uploads",
+);
+
 const TAPES_FILE = path.join(DATA_DIR, "tapes.json");
-const RECORDINGS_DIR = path.join(process.cwd(), "recordings");
-const NAS_DIR = path.join(process.cwd(), "nas");
+
+fs.mkdirSync(DATA_DIR, { recursive: true });
+fs.mkdirSync(RECORDINGS_DIR, { recursive: true });
+fs.mkdirSync(NAS_DIR, { recursive: true });
+fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+fs.mkdirSync(path.join(UPLOADS_DIR, "covers"), { recursive: true });
 
 const readTapes = () => {
   if (!fs.existsSync(TAPES_FILE)) {
@@ -27,7 +45,7 @@ const writeTapes = (tapes) => {
 
 const coverStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.join(process.cwd(), "uploads", "covers");
+    const uploadDir = path.join(UPLOADS_DIR, "covers");
 
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
@@ -82,11 +100,10 @@ const syncTapeLocations = (tapes) => {
 const uploadCover = multer({ storage: coverStorage });
 
 const app = express();
-const PORT = 5174;
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use("/uploads", express.static(UPLOADS_DIR));
 
 let recordingProcess = null;
 
@@ -97,6 +114,14 @@ let recordingState = {
   startedAt: null,
   filename: null,
 };
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    status: "online",
+    service: "vhs-pi",
+  });
+});
 
 app.post("/api/record/start", (req, res) => {
   if (recordingProcess) {
