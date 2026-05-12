@@ -55,3 +55,7 @@
 - Review
 - Transfer
 - Archive Complete
+
+**IR Sensor Integration**
+
+- Control VCR (play, stop, rewind, etc..)

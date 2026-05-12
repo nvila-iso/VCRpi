@@ -1,0 +1,26 @@
+[
+  {
+    "id": "0abb3186-b19d-472d-ab7e-952555566060",
+    "title": "Jurassic Park",
+    "length": 120,
+    "condition": "excellent",
+    "format": "VHS",
+    "captureDate": "2026-05-11",
+    "status": "ON_NAS",
+    "coverImage": "/uploads/covers/0abb3186-b19d-472d-ab7e-952555566060.jpg",
+    "createdAt": "2026-05-11T20:33:46.511Z",
+    "updatedAt": "2026-05-12T15:16:35.543Z",
+    "recordings": [
+      {
+        "filename": "jurassic_park_2026-05-11.mkv",
+        "recordedAt": "2026-05-11T19:48:29.895Z",
+        "stoppedAt": "2026-05-11T19:50:00.000Z",
+        "status": "ON_NAS",
+        "nasPath": "C:\\Users\\Nick\\Documents\\Projects\\vhs-pi\\server\\nas\\jurassic_park_2026-05-11.mkv",
+        "transferredAt": "2026-05-12T15:16:35.543Z"
+      }
+    ],
+    "recordingStartedAt": "2026-05-12T14:53:28.468Z",
+    "activeRecordingFilename": "jurassic_park_2026-05-12.mkv"
+  }
+]

@@ -2,14 +2,21 @@ import vhs_tape from "../../public/vhs_tape.svg";
 import { IoTriangle } from "react-icons/io5";
 import { useState } from "react";
 
-const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete }) => {
+const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete, onTransfer }) => {
   const [coverPreview, setCoverPreview] = useState(
-    tapeToEdit?.coverImage || "/VAS_VHS.png",
+    tapeToEdit?.coverImage?.startsWith("/uploads")
+      ? `http://localhost:5174${tapeToEdit.coverImage}`
+      : tapeToEdit?.coverImage || "/VAS_VHS.png",
   );
-  const [title, setTitle] = useState("");
-  const [length, setLength] = useState("");
-  const [condition, setCondition] = useState("");
+
+  const [title, setTitle] = useState(tapeToEdit?.title || "");
+  const [length, setLength] = useState(tapeToEdit?.length || "");
+  const [condition, setCondition] = useState(tapeToEdit?.condition || "");
   const [coverFile, setCoverFile] = useState(null);
+  const [filePath, setFilePath] = useState(tapeToEdit?.coverImage || "--");
+  const [fileLocation, setFileLocation] = useState(
+    tapeToEdit?.recordings?.at(-1)?.status || "--",
+  );
 
   const handleCoverChange = (e) => {
     const file = e.target.files[0];
@@ -70,14 +77,14 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete }) => {
               <input
                 type="text"
                 placeholder="TITLE"
-                value={tapeToEdit ? tapeToEdit.title : title}
+                value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 className="border-b border-amber-100 p-1 w-[90%]"
               />
               <input
                 type="text"
-                value={tapeToEdit ? tapeToEdit.length : length}
+                value={length}
                 onChange={(e) => setLength(e.target.value)}
                 placeholder="LENGTH"
                 className="border-b border-amber-100 p-1 w-[90%]"
@@ -85,7 +92,7 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete }) => {
               <select
                 name=""
                 id=""
-                value={tapeToEdit ? tapeToEdit.condition : condition}
+                value={condition}
                 onChange={(e) => setCondition(e.target.value)}
                 className="p-1 border-b w-[90%] border-amber-100 text-amber-100"
               >
@@ -107,12 +114,20 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete }) => {
               </button>
             </form>
             {tapeToEdit && (
-              <button
-                onClick={onDelete}
-                className="absolute top-15 left-80 border border-amber-200/70 px-2 py-1 text-xs text-amber-200/70 hover:text-amber-200 hover:border-amber-200 transition cursor-pointer"
-              >
-                DELETE
-              </button>
+              <div className="absolute top-15 flex w-90 justify-between">
+                <button
+                  onClick={onTransfer}
+                  className="border border-amber-200/70 px-2 py-1 text-xs text-amber-200/70 hover:text-amber-200 hover:border-amber-200 transition cursor-pointer"
+                >
+                  TRANSFER
+                </button>
+                <button
+                  onClick={onDelete}
+                  className="border border-amber-200/70 px-2 py-1 text-xs text-amber-200/70 hover:text-amber-200 hover:border-amber-200 transition cursor-pointer"
+                >
+                  DELETE
+                </button>
+              </div>
             )}
           </div>
           <div className="border-l border-amber-200/30 relative">
@@ -121,24 +136,35 @@ const TapeModal = ({ onSave, onCancel, tapeToEdit, onDelete }) => {
               alt=""
               className="w-full h-full object-cover"
             />
-
-            <div className="absolute top-20 left-25 flex flex-col items-center gap-3">
-              <IoTriangle className="text-3xl text-amber-100" />
-              <img src={vhs_tape} alt="" className="w-full h-full" />
-              <div className="text-center">
-                <p className="text-xl text-amber-100 font-semibold">
-                  INSERT CASSETTE
-                </p>
-                <p className="font-semibold text-xs text-amber-100 flex justify-center">
-                  WAITING FOR SIGNAL
-                  <span className="ml-1 flex gap-2 ">
-                    <span className="dot-1">.</span>
-                    <span className="dot-2">.</span>
-                    <span className="dot-3">.</span>
-                  </span>
-                </p>
+            {tapeToEdit && (
+              <div className="absolute top-5 left-2 px-2 py-1 w-45 rounded ">
+                <div className="flex flex-col gap-3 text-xs">
+                  <div className="">
+                    <p className="text-amber-400">FILE</p>
+                    <p className="">
+                      {/* {tapeToEdit?.activeRecordingFilename ||
+                        tapeToEdit?.recordings?.at(-1)?.filename ||
+                        "--"} */}
+                      {filePath}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-amber-400">LOCATION</p>
+                    <p className="">
+                      {fileLocation === "ON_NAS" ? "NAS" : "Pi"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-amber-400">RECORDED AT</p>
+                    <p className="">
+                      {tapeToEdit?.recordings
+                        ?.at(-1)
+                        ?.recordedAt?.slice(0, 10) || "--"}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

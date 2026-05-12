@@ -1,3 +1,5 @@
+import { API_BASE } from "../config";
+
 import { IoIosRewind } from "react-icons/io";
 import { IoIosPlay } from "react-icons/io";
 import { IoIosPause } from "react-icons/io";
@@ -6,42 +8,105 @@ import { FaCircle } from "react-icons/fa";
 import { FaCamera } from "react-icons/fa6";
 import { FaEject } from "react-icons/fa";
 
-const TransportControls = ({ isRecording, setIsRecording }) => {
+const TransportControls = ({
+  isRecording,
+  setIsRecording,
+  tapes,
+  selectedTapeId,
+  setTapes,
+  setSystemStatus,
+  updateTape,
+}) => {
+  const selectedTape = tapes.find((tape) => tape.id === selectedTapeId);
+
+  const makeFilename = (title) => {
+    return `${title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_|_$/g, "")}_${new Date().toISOString().slice(0, 10)}.mkv`;
+  };
+
   const handleRecord = async () => {
     try {
+      if (!selectedTape && !isRecording) {
+        alert("No tape selected.");
+        return;
+      }
+
       if (isRecording) {
         const confirmed = window.confirm(
-          "Are you sure you want to cancel recording?",
+          "Are you sure you want to stop recording?",
         );
 
         if (!confirmed) return;
 
         try {
-          const response = await fetch(
-            "http://localhost:5174/api/record/stop",
-            {
-              method: "POST",
-            },
-          );
+          const response = await fetch(`${API_BASE}/api/record/stop`, {
+            method: "POST",
+          });
 
-          const data = await response.json();
+          let data = {};
+
+          try {
+            data = await response.json();
+          } catch {
+            console.log("Stop endpoint returned no JSON");
+          }
+
           console.log(data);
+
+          if (!response.ok) {
+            if (data.error === "No recording in progress") {
+              setIsRecording(false);
+              setSystemStatus("STANDBY");
+
+              await updateTape(selectedTapeId, {
+                status: "READY",
+              });
+
+              return;
+            }
+
+            setSystemStatus("ERROR");
+            console.error(data.error);
+            return;
+          }
+
+          const stoppedAt = new Date().toISOString();
+
+          await updateTape(selectedTapeId, {
+            status: "RECORDED",
+            recordingStoppedAt: stoppedAt,
+            recordings: [
+              ...(selectedTape.recordings || []),
+              {
+                filename: selectedTape.activeRecordingFilename,
+                recordedAt: selectedTape.recordingStartedAt,
+                stoppedAt,
+                status: "ON_PI",
+              },
+            ],
+            activeRecordingFilename: null,
+          });
+
+          setIsRecording(false);
+          setSystemStatus("STANDBY");
         } catch (err) {
+          setSystemStatus("ERROR");
           console.error("Stop request failed:", err);
         }
 
-        setIsRecording(false);
         return;
       }
 
-      const response = await fetch("http://localhost:5174/api/record/start", {
+      const response = await fetch(`${API_BASE}/api/record/start`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "TEST_WEB",
-          minutes: 1,
+          name: selectedTape.title,
+          minutes: 120,
           countdown: 5,
         }),
       });
@@ -49,13 +114,26 @@ const TransportControls = ({ isRecording, setIsRecording }) => {
       const data = await response.json();
 
       if (!response.ok) {
+        setSystemStatus("ERROR");
         console.error(data.error);
         return;
       }
 
       console.log(data);
+
+      const filename = makeFilename(selectedTape.title);
+      const startedAt = new Date().toISOString();
+
+      await updateTape(selectedTapeId, {
+        status: "CAPTURING",
+        recordingStartedAt: startedAt,
+        activeRecordingFilename: filename,
+      });
+
       setIsRecording(true);
+      setSystemStatus("RECORDING");
     } catch (err) {
+      setSystemStatus("ERROR");
       console.error("Recording error:", err);
     }
   };

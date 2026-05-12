@@ -1,4 +1,4 @@
-const Nav = ({ isRecording }) => {
+const Nav = ({ systemStatus }) => {
   return (
     <div className="py-2 px-5 border-1 bg-black/30 flex justify-between items-center">
       <div>
@@ -15,14 +15,17 @@ const Nav = ({ isRecording }) => {
           <p>21:48:36</p>
           <p>05/24/1994</p>
         </div>
-        <div className="w-35 text-sm border-1 border-white/30 text-white p-3">
+        <div
+          className="
+        w-45 text-sm border-1 border-white/30 text-white p-3"
+        >
           <p className="font-bold opacity-80">STATUS</p>
           <p
-            className={`text-xl font-bold ${
-              isRecording ? "text-red-400" : "text-emerald-300"
-            }`}
+            className={`text-xl font-bold
+              ${systemStatus === "RECORDING" ? "text-red-400" : systemStatus === "TRANSFERRING" ? "text-blue-300" : systemStatus === "ERROR" ? "text-yellow-300" : "text-emerald-300"}
+              `}
           >
-            {isRecording ? "RECORDING" : "STANDBY"}
+            {systemStatus}
           </p>
         </div>
         <div className="w-45 ">

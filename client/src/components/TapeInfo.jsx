@@ -31,14 +31,18 @@ const TapeInfo = ({ tapes, selectedTapeId }) => {
             </div>
             <div>
               <p class="text-xs text-amber-400">CONDITION</p>
-              <p>{selectedTape?.condition || "--"}</p>
+              <p>{selectedTape?.condition.toUpperCase() || "--"}</p>
             </div>
           </div>
 
-          <div className="h-[70%]">
+          <div className="h-[80%] flex flex-col items-center justify-center">
             <img
-              src={selectedTape?.coverImage || "VAS_VHS.png"}
-              className="h-full w-full object-contain"
+              src={
+                selectedTape?.coverImage?.startsWith("/uploads")
+                  ? `http://localhost:5174${selectedTape.coverImage}`
+                  : selectedTape?.coverImage || "/VAS_VHS.png"
+              }
+              className="h-full object-cover"
             />
           </div>
         </div>
